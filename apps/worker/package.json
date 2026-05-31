@@ -1,0 +1,11 @@
+{
+  "name": "@talent-intelligence/worker",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "python -m app.main",
+    "build": "python -m compileall app",
+    "start": "python -m app.main",
+    "typecheck": "python -m compileall app"
+  }
+}

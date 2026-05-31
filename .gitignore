@@ -1,0 +1,42 @@
+# dependencies
+node_modules
+
+# frontend builds and caches
+.next
+.turbo
+.vercel
+out
+dist
+build
+*.tsbuildinfo
+
+# python
+.venv
+venv
+__pycache__
+*.py[cod]
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.coverage
+htmlcov
+
+# env and secrets
+.env
+.env.*
+!.env.example
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# editor and OS files
+.vscode
+.idea
+.DS_Store
+
+# local planning notes
+resume_auto_overview.md

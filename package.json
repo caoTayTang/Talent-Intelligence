@@ -1,0 +1,23 @@
+{
+  "name": "talent-intelligence",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @talent-intelligence/web",
+    "dev:web": "npm run dev --workspace @talent-intelligence/web",
+    "dev:api": "npm run dev --workspace @talent-intelligence/api",
+    "dev:worker": "npm run dev --workspace @talent-intelligence/worker",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "db:generate": "npm run db:generate --workspace @talent-intelligence/api",
+    "db:migrate": "npm run db:migrate --workspace @talent-intelligence/api"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  }
+}
