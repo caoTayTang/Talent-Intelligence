@@ -1,14 +1,14 @@
 # Deployment Scaffold
 
-This directory is for demonstrating deployment and Kubernetes design skills. It is intentionally a scaffold and does not deploy anything by itself.
+This directory demonstrates deployment and Kubernetes design. It is intentionally a scaffold and does not deploy anything by itself.
 
 ## Components
 
 - `web`: Next.js candidate and HR UI.
-- `api`: FastAPI service for applications, uploads, queue publishing, and scheduling.
-- `worker`: Python Redis-list consumers for agent jobs.
-- `postgres`: external managed Postgres with pgvector in production.
-- `redis`: external managed Redis in production.
+- `api`: FastAPI service for applications, uploads, and Celery task publishing.
+- `worker`: Celery worker for agent jobs.
+- `postgres`: external managed PostgreSQL with pgvector in production.
+- `rabbitmq`: RabbitMQ broker, preferably managed or deployed as a dedicated StatefulSet/Helm chart in production.
 - `r2`: Cloudflare R2 for CVs, test submissions, job assets, and transcripts.
 
 ## Image Build Examples
@@ -32,4 +32,4 @@ deploy/k8s/base
   ingress.yaml
 ```
 
-For a real deployment, replace image names, wire managed Postgres/Redis URLs, create secrets through your cloud secret manager, and run database migrations as a one-off job.
+For a real deployment, replace image names, wire managed PostgreSQL/RabbitMQ URLs, create secrets through your cloud secret manager, and run database migrations as a one-off job.

@@ -1,12 +1,20 @@
-import json
+from app.celery_app import celery_app
 
-from redis import Redis
+TASK_TO_QUEUE = {
+    "agent.manager": "agent.manager",
+    "agent.job_assistant": "agent.job_assistant",
+    "agent.cv_screening": "agent.cv_screening",
+    "agent.assessment": "agent.assessment",
+    "agent.transcriber": "agent.transcriber",
+}
 
-from app.config import settings
 
-
-redis_client = Redis.from_url(settings.redis_url, decode_responses=True)
-
-
-def enqueue(queue_name: str, payload: dict) -> None:
-    redis_client.rpush(queue_name, json.dumps(payload, default=str))
+def enqueue(task_name: str, payload: dict) -> str:
+    queue_name = TASK_TO_QUEUE[task_name]
+    async_result = celery_app.send_task(
+        task_name,
+        args=[payload],
+        queue=queue_name,
+        routing_key=queue_name,
+    )
+    return async_result.id

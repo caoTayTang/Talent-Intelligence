@@ -3,9 +3,10 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "dev": "python -m app.main",
+    "dev": "celery -A app.celery_app worker --loglevel=info -Q agent.cv_screening,agent.assessment,agent.transcriber,agent.job_assistant,agent.manager",
+    "dev:windows": "celery -A app.celery_app worker --loglevel=info --pool=solo -Q agent.cv_screening,agent.assessment,agent.transcriber,agent.job_assistant,agent.manager",
     "build": "python -m compileall app",
-    "start": "python -m app.main",
+    "start": "celery -A app.celery_app worker --loglevel=info -Q agent.cv_screening,agent.assessment,agent.transcriber,agent.job_assistant,agent.manager",
     "typecheck": "python -m compileall app"
   }
 }

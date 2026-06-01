@@ -1,6 +1,6 @@
 # Agent Instructions
 
-This project is a Talent Intelligence / multi-agent ATS scaffold using Next.js, FastAPI, SQLAlchemy, PostgreSQL + pgvector, Redis, Cloudflare R2, and Kubernetes deployment examples.
+This project is a Talent Intelligence / multi-agent ATS scaffold using Next.js, FastAPI, SQLAlchemy, PostgreSQL + pgvector, RabbitMQ + Celery, Cloudflare R2, and Kubernetes deployment examples.
 
 Follow these behavioral guidelines when changing this codebase.
 

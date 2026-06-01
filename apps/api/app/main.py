@@ -51,7 +51,7 @@ def create_application(request: CreateApplicationRequest, db: Session = Depends(
     db.commit()
     db.refresh(application)
 
-    enqueue("cv-screening", {"application_id": str(application.id)})
+    enqueue("agent.cv_screening", {"application_id": str(application.id)})
 
     return {"id": str(application.id), "status": application.status.value}
 
@@ -67,7 +67,7 @@ def submit_test(application_id: UUID, request: SubmitTestRequest, db: Session = 
     application.status = ApplicationStatus.test_submitted
     db.commit()
 
-    enqueue("assessment", {"application_id": str(application.id)})
+    enqueue("agent.assessment", {"application_id": str(application.id)})
 
     return {"id": str(application.id), "status": application.status.value}
 
