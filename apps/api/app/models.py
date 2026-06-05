@@ -163,7 +163,7 @@ class ChatMessage(Base):
     
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
-    session: Mapped[ChatSession] = relationship(back_populates="messages")
+    session: Mapped["ChatSession"] = relationship(back_populates="messages")
 
 
 class Application(Base):
@@ -251,4 +251,4 @@ class AgentRun(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    application: Mapped[Application] = relationship(back_populates="agent_runs")
+    application: Mapped["Application"] = relationship(back_populates="agent_runs")
