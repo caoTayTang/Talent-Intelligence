@@ -8,6 +8,6 @@
     "start": "python -m uvicorn app.main:app --host 0.0.0.0 --port 4000",
     "typecheck": "python -m compileall app",
     "db:generate": "python -c \"print('FastAPI uses SQLAlchemy models; no generated DB client is required.')\"",
-    "db:migrate": "python -m app.db_migrate"
+    "db:migrate": "alembic upgrade head"
   }
 }

@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.db import get_db
-from app.models import User
+from talent_core.db import get_db
+from talent_core.models import User
 from app.schemas.users import CreateUserRequest, UserResponse
 
 router = APIRouter()
@@ -37,6 +37,7 @@ def create_user(
     db.refresh(user)
     return UserResponse.from_model(user)
 
+
 @router.get("/{user_id}", response_model=UserResponse)
 def get_user(user_id: str, db: Session = Depends(get_db)) -> UserResponse:
     user = db.get(User, user_id)
@@ -44,3 +45,4 @@ def get_user(user_id: str, db: Session = Depends(get_db)) -> UserResponse:
         raise HTTPException(status_code=404, detail="User not found")
 
     return UserResponse.from_model(user)
+

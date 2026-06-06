@@ -1,0 +1,15 @@
+[project]
+name = "talent-core"
+version = "0.1.0"
+description = "Shared backend database and domain code for Talent Intelligence"
+requires-python = ">=3.12"
+dependencies = [
+  "sqlalchemy==2.0.36",
+  "psycopg[binary]==3.2.3",
+  "pydantic-settings==2.7.1",
+  "pgvector==0.3.6",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

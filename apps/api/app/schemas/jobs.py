@@ -3,7 +3,7 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-from app.models import Job
+from talent_core.models import Job
 
 
 class CreateJobRequest(BaseModel):
@@ -45,3 +45,4 @@ class JobResponse(BaseModel):
             created_at=job.created_at,
             updated_at=job.updated_at,
         )
+
