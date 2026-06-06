@@ -40,3 +40,5 @@ pnpm-debug.log*
 
 # local planning notes
 resume_auto_overview.md
+pyrightconfig.json
+agent_implement.md
