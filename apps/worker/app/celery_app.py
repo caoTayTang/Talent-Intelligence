@@ -6,6 +6,7 @@ from app.config import settings
 agent_exchange = Exchange("agents", type="direct", durable=True)
 dead_letter_exchange = Exchange("agents.dlx", type="direct", durable=True)
 
+
 def agent_queue(name: str) -> Queue:
     return Queue(
         name,
@@ -26,16 +27,15 @@ celery_app = Celery(
     include=["app.tasks"],
 )
 
+# NOTE: Sau nay co them agent vo thi add vo cho nay nha!!
 celery_app.conf.update(
-    task_default_exchange="agents",
-    task_default_exchange_type="direct",
-    task_default_routing_key="agent.manager",
+    # FUTURE QUEUEUS
+    # task_default_exchange="agents",
+    # task_default_exchange_type="direct",
+    # task_default_routing_key="agent.manager", # khi cai task no khong dinh cai task nao thi di vo manager?!
     task_queues=(
-        agent_queue("agent.manager"),
-        agent_queue("agent.job_assistant"),
         agent_queue("agent.cv_screening"),
-        agent_queue("agent.assessment"),
-        agent_queue("agent.transcriber"),
+        # agent_queue("agent.abcxyz"),
         Queue(
             "agent.dead_letter",
             exchange=dead_letter_exchange,
@@ -44,16 +44,17 @@ celery_app.conf.update(
         ),
     ),
     task_routes={
-        "agent.manager": {"queue": "agent.manager", "routing_key": "agent.manager"},
-        "agent.job_assistant": {"queue": "agent.job_assistant", "routing_key": "agent.job_assistant"},
-        "agent.cv_screening": {"queue": "agent.cv_screening", "routing_key": "agent.cv_screening"},
-        "agent.assessment": {"queue": "agent.assessment", "routing_key": "agent.assessment"},
-        "agent.transcriber": {"queue": "agent.transcriber", "routing_key": "agent.transcriber"},
+        "agent.cv_screening": {
+            "queue": "agent.cv_screening",
+            "routing_key": "agent.cv_screening",
+        },
     },
+    # FUTURE ROUTES TOO...
     task_serializer="json",
     accept_content=["json"],
     result_serializer="json",
     task_acks_late=True,
     task_reject_on_worker_lost=True,
     worker_prefetch_multiplier=1,
+    broker_connection_retry_on_startup=True,
 )
