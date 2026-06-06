@@ -42,3 +42,5 @@ pnpm-debug.log*
 resume_auto_overview.md
 pyrightconfig.json
 agent_implement.md
+
+pub.sh

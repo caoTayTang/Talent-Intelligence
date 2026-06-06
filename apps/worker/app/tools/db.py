@@ -1,4 +1,5 @@
 import json
+import uuid
 
 import psycopg
 
@@ -54,6 +55,7 @@ def save_agent_run(
             cur.execute(
                 """
                 INSERT INTO agent_runs (
+                    id,
                     application_id,
                     agent_type, 
                     input_json,
@@ -61,9 +63,10 @@ def save_agent_run(
                     status,
                     created_at,
                     updated_at
-                ) VALUES (%s, %s, %s, %s, 'succeeded', NOW(), NOW())
+                ) VALUES (%s, %s, %s, %s, %s, 'succeeded', NOW(), NOW())
                 """,
                 (
+                    str(uuid.uuid4()),
                     application_id,
                     agent_type,
                     json.dumps(input_json),

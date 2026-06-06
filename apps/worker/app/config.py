@@ -13,6 +13,11 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(env_file=ENV_FILE, extra="ignore")
 
+    r2_account_id: str = ""
+    r2_access_key_id: str = ""
+    r2_secret_access_key: str = ""
+    r2_bucket: str = "talent-intelligence-dev"
+
     @property
     def psycopg_database_url(self) -> str:
         return self.database_url.replace("postgresql+psycopg://", "postgresql://", 1)
