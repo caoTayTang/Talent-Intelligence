@@ -6,6 +6,7 @@ from typing import List
 
 from sqlalchemy import (
     Boolean,
+    Integer,
     DateTime,
     Enum,
     Float,
@@ -161,6 +162,11 @@ class Job(Base):
     test_object_url: Mapped[str | None] = mapped_column(String)
     scorecard_json: Mapped[dict | None] = mapped_column(JSONB)
     jd_object_url: Mapped[str | None] = mapped_column(String)
+
+    # Nếu HR chọn gen đề tự động thì cần cung cấp cấu trúc đề và phân phối điểm
+    dynamic_test_config: Mapped[dict | None] = mapped_column(JSONB)
+
+    test_duration: Mapped[int] = mapped_column(Integer, default=3)
 
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

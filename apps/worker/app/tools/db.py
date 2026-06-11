@@ -1,5 +1,7 @@
+from datetime import timedelta
 from uuid import UUID
 
+from packages.backend_shared.talent_core.models import *
 from sqlalchemy.orm import Session
 
 from talent_core.db import SessionLocal
@@ -22,6 +24,7 @@ def load_application_context(application_id: str) -> dict:
             "cv_object_key": application.cv_object_key,
             "jd_text": application.job.description,
             "scorecard_json": application.job.scorecard_json,
+            "dynamic_test_config": application.job.dynamic_test_config,
         }
     finally:
         db.close()
@@ -83,3 +86,28 @@ def update_cv_screening_result(
         raise
     finally:
         db.close()
+
+def update_dynamic_test_content(application_id: str, test_content: dict) -> None:
+    "Update dynamic test content for the application after question generator graph finishes and open Test round for candidates"
+    with SessionLocal() as db:
+        app = db.query(Application).filter(Application.id == UUID(application_id)).first()
+        if not app:
+            raise ValueError(f"Application {application_id} not found")
+
+        app.dynamic_test_content = test_content
+        
+        app.status = ApplicationStatus.cv_passed 
+
+        duration_days = app.job.test_duration if app.job.test_duration else 3
+        app.test_deadline = datetime.now(datetime.timezone.utc) + timedelta(days=duration_days)
+        
+        new_noti = Notification(
+            user_id=app.candidate_id,
+            type=NotificationType.test_unlocked,
+            title="Test round unlocked",
+            message=f"Congrats! {app.job.title} test has been unlocked. You have {duration_days} days to complete it.",
+            is_read=False
+        )
+        db.add(new_noti)
+        
+        db.commit()
