@@ -45,3 +45,5 @@ pyrightconfig.json
 agent_implement.md
 
 pub.sh
+docs/cv_screening_branch_*.html
+docs/test_scenarios/

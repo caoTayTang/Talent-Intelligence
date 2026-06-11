@@ -368,7 +368,7 @@ class DocumentChunk(Base):
 
     section: Mapped[str | None] = mapped_column(String)
     chunk_text: Mapped[str] = mapped_column(Text)
-    embedding: Mapped[list[float]] = mapped_column(Vector(2048))
+    embedding: Mapped[list[float]] = mapped_column(Vector(4096))
     metadata_json: Mapped[dict] = mapped_column(JSONB, default=dict)
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

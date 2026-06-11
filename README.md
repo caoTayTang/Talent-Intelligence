@@ -44,7 +44,7 @@ Install project dependencies:
 ```bash
 npm install
 uv venv
-uv pip install --python .venv/bin/python -r apps/api/requirements.txt -r apps/worker/requirements.txt
+uv pip install --python .venv/bin/python -r apps/api/requirements.txt -r apps/worker/requirements.txt -e packages/backend_shared
 cp .env.example .env
 ```
 
