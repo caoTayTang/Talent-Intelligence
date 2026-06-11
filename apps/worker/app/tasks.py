@@ -1,10 +1,4 @@
-import json
-
-import psycopg
-
 from app.celery_app import celery_app
-from app.config import settings
-
 from app.orchestration.cv_screening_graph import run_cv_screening_graph
 
 
