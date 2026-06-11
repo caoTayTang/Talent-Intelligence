@@ -3,8 +3,8 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.db import get_db
-from app.models import Company
+from talent_core.db import get_db
+from talent_core.models import Company
 from app.schemas.companies import CreateCompanyRequest, CompanyResponse
 
 router = APIRouter()
@@ -45,3 +45,4 @@ def get_company(
         raise HTTPException(status_code=404, detail="Company not found")
 
     return CompanyResponse.from_model(company)
+

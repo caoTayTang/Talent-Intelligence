@@ -1,15 +1,18 @@
 from pydantic import BaseModel
 from uuid import UUID
-from app.models import Application
+from talent_core.models import Application
+
 
 class CreateApplicationRequest(BaseModel):
     candidate_id: UUID
     job_id: UUID
     cv_object_key: str
 
+
 class SubmitTestRequest(BaseModel):
     test_answer: dict | list | None = None
     test_submission_url: list[str] | None = None
+
 
 class ApplicationResponse(BaseModel):
     id: UUID
@@ -43,3 +46,4 @@ class ApplicationResponse(BaseModel):
             interview_score=application.interview_score,
             detailed_score_json=application.detailed_score_json,
         )
+

@@ -5,7 +5,8 @@ ENV PYTHONUNBUFFERED=1
 
 COPY --from=ghcr.io/astral-sh/uv:0.9.6 /uv /usr/local/bin/uv
 COPY apps/api/requirements.txt ./requirements.txt
-RUN uv pip install --system --no-cache -r requirements.txt
+COPY packages/backend_shared ./packages/backend_shared
+RUN uv pip install --system --no-cache -r requirements.txt -e ./packages/backend_shared
 
 COPY apps/api/app ./app
 

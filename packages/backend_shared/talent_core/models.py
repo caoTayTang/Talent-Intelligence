@@ -1,3 +1,4 @@
+from pgvector.sqlalchemy import Vector
 import enum
 import uuid
 from datetime import datetime
@@ -16,7 +17,7 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.db import Base
+from .db import Base
 
 
 # ==========================================
@@ -337,3 +338,37 @@ class AgentRun(Base):
     )
 
     application: Mapped["Application"] = relationship(back_populates="agent_runs")
+
+
+class DocumentOwnerType(str, enum.Enum):
+    job = "job"
+    application = "application"
+
+
+class DocumentChunkSource(str, enum.Enum):
+    jd = "jd"
+    cv = "cv"
+
+
+class DocumentChunk(Base):
+    __tablename__ = "document_chunks"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+
+    owner_type: Mapped[DocumentOwnerType] = mapped_column(
+        Enum(DocumentOwnerType, name="document_owner_type"), index=True
+    )
+    owner_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), index=True)
+
+    source: Mapped[DocumentChunkSource] = mapped_column(
+        Enum(DocumentChunkSource, name="document_chunk_source"), index=True
+    )
+
+    section: Mapped[str | None] = mapped_column(String)
+    chunk_text: Mapped[str] = mapped_column(Text)
+    embedding: Mapped[list[float]] = mapped_column(Vector(4096))
+    metadata_json: Mapped[dict] = mapped_column(JSONB, default=dict)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

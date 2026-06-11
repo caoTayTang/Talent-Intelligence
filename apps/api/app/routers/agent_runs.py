@@ -2,8 +2,8 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.db import get_db
-from app.models import AgentRun
+from talent_core.db import get_db
+from talent_core.models import AgentRun
 
 router = APIRouter()
 

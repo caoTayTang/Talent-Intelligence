@@ -40,5 +40,10 @@ pnpm-debug.log*
 
 # local planning notes
 resume_auto_overview.md
+cv_plan.md
 pyrightconfig.json
 agent_implement.md
+
+pub.sh
+docs/cv_screening_branch_*.html
+docs/test_scenarios/

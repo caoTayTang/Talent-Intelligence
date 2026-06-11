@@ -3,7 +3,7 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-from app.models import Company
+from talent_core.models import Company
 
 
 class CreateCompanyRequest(BaseModel):
@@ -30,3 +30,4 @@ class CompanyResponse(BaseModel):
             created_at=company.created_at,
             updated_at=company.updated_at,
         )
+

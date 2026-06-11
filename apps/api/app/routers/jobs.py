@@ -2,8 +2,8 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.db import get_db
-from app.models import Job
+from talent_core.db import get_db
+from talent_core.models import Job
 from app.schemas.jobs import (
     CreateJobRequest,
     JobResponse,
@@ -11,11 +11,9 @@ from app.schemas.jobs import (
 
 router = APIRouter()
 
+
 @router.post("", response_model=JobResponse, status_code=201)
-def create_job(
-    request: CreateJobRequest, 
-    db: Session = Depends(get_db)
-) -> JobResponse:
+def create_job(request: CreateJobRequest, db: Session = Depends(get_db)) -> JobResponse:
 
     job = Job(
         company_id=request.company_id,
@@ -33,6 +31,7 @@ def create_job(
 
     return JobResponse.from_model(job)
 
+
 @router.get("/{job_id}", response_model=JobResponse)
 def get_job(job_id: UUID, db: Session = Depends(get_db)) -> JobResponse:
     job = db.get(Job, job_id)
@@ -40,3 +39,4 @@ def get_job(job_id: UUID, db: Session = Depends(get_db)) -> JobResponse:
         raise HTTPException(status_code=404, detail="Job not found")
 
     return JobResponse.from_model(job)
+

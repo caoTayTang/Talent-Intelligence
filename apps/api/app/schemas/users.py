@@ -1,10 +1,9 @@
-
 from uuid import UUID
 from datetime import datetime
 
 from pydantic import BaseModel, EmailStr
 
-from app.models import User, UserRole
+from talent_core.models import User, UserRole
 
 
 class CreateUserRequest(BaseModel):
@@ -31,3 +30,4 @@ class UserResponse(BaseModel):
             is_active=user.is_active,
             created_at=user.created_at,
         )
+

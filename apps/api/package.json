@@ -3,11 +3,11 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "dev": "python -m uvicorn app.main:app --host 0.0.0.0 --port 4000 --reload",
-    "build": "python -m compileall app",
-    "start": "python -m uvicorn app.main:app --host 0.0.0.0 --port 4000",
-    "typecheck": "python -m compileall app",
-    "db:generate": "python -c \"print('FastAPI uses SQLAlchemy models; no generated DB client is required.')\"",
-    "db:migrate": "python -m app.db_migrate"
+    "dev": "../../.venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 4000 --reload",
+    "build": "../../.venv/bin/python -m compileall app",
+    "start": "../../.venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 4000",
+    "typecheck": "../../.venv/bin/python -m compileall app",
+    "db:generate": "../../.venv/bin/python -c \"print('FastAPI uses SQLAlchemy models; no generated DB client is required.')\"",
+    "db:migrate": "PYTHONPATH=../../packages/backend_shared/talent_core ../../.venv/bin/alembic upgrade head"
   }
 }
