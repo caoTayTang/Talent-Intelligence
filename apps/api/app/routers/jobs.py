@@ -23,6 +23,7 @@ def create_job(request: CreateJobRequest, db: Session = Depends(get_db)) -> JobR
         test_object_url=request.test_object_url,
         scorecard_json=request.scorecard_json,
         jd_object_url=request.jd_object_url,
+        test_duration=3,
         is_active=request.is_active,
     )
     db.add(job)

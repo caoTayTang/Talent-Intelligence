@@ -14,7 +14,7 @@ def load_application_context(application_id: str) -> dict:
     """
     db: Session = SessionLocal()
     try:
-        application = db.get(Application, UUID(application_id))
+        application = db.get(Application, str(application_id))
         if application is None:
             raise ValueError(f"Application not found: {application_id}")
 
@@ -45,7 +45,7 @@ def save_agent_run(
     try:
         db.add(
             AgentRun(
-                application_id=UUID(application_id),
+                application_id=str(application_id),
                 agent_type=agent_type,
                 input_json=input_json,
                 output_json=output_json,
@@ -69,7 +69,7 @@ def update_cv_screening_result(
     """
     db: Session = SessionLocal()
     try:
-        application = db.get(Application, UUID(application_id))
+        application = db.get(Application, str(application_id))
         if application is None:
             raise ValueError(f"Application not found: {application_id}")
 
