@@ -1,3 +1,5 @@
+from sqlalchemy import text
+
 from talent_core.config import settings
 from talent_core.db import Base
 from talent_core import models  # noqa: F401
@@ -69,11 +71,22 @@ def run_migrations_online() -> None:
         poolclass=pool.NullPool,
     )
 
+    print(f"\n---> ALEMBIC ĐANG KẾT NỐI TỚI: {connectable.url}\n")
+
     with connectable.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata)
+        connection.execute(text("SET search_path TO talent_intelligence"))
+
+        context.configure(
+            connection=connection, 
+            target_metadata=target_metadata,
+            version_table_schema="talent_intelligence",
+            include_schemas=True,
+            )
 
         with context.begin_transaction():
             context.run_migrations()
+        
+        connection.commit()
 
 
 if context.is_offline_mode():

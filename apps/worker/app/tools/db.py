@@ -1,7 +1,7 @@
 from datetime import timedelta
 from uuid import UUID
 
-from packages.backend_shared.talent_core.models import *
+from talent_core.models import *
 from sqlalchemy.orm import Session
 
 from talent_core.db import SessionLocal
