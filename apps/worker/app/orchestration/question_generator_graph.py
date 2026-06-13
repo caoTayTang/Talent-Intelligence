@@ -1,9 +1,11 @@
 import json
 import logging
-from langgraph.graph import END, StateGraph
+import time
 
+from pydantic import BaseModel, Field
+from typing import List, Literal, Optional
+from langgraph.graph import END, StateGraph
 from app.orchestration.state import TestGeneratorState
-from apps.api.app.schemas.test_schema import DynamicTestStructure
 from app.tools.db import load_application_context, update_dynamic_test_content
 from app.tools.llm import chat_json
 from app.tools.r2 import load_r2_text_object
@@ -12,6 +14,27 @@ from app.tools.profile_extraction import extract_cv_profile
 logger = logging.getLogger(__name__)
 
 MAX_RETRIES = 3
+
+class MCQOptions(BaseModel):
+    label: str = Field(description="Choice symbol (VD: A, B, C, D)")
+    text: str = Field(description="Choice content")
+
+class Question(BaseModel):
+    id: str = Field(description="Question ID")
+    type: Literal["multiple_choice", "essay"]
+    content: str = Field(description="Question content")
+    points: int = Field(description="Points for the question")
+
+    options: Optional[List[MCQOptions]] = Field(description="List of options for multiple choice questions - type = multiple_choice")
+
+    expected_answer: Optional[str] = Field(description="Expected answer for questions")
+    hints: Optional[List[str]] = Field(description="List of hints for the question")
+
+class DynamicTestStructure(BaseModel):
+    test_title: str = Field(description="Title of the test base on JD")
+    time_limit_minutes: int = Field(description="Time limit for the test in minutes")
+    questions: List[Question] = Field(description="List of questions in the test")
+
 
 def load_context(state: TestGeneratorState) -> TestGeneratorState:
     logger.info(f"generator.load_context application_id={state['application_id']}")
@@ -52,6 +75,7 @@ def generate_questions(state: TestGeneratorState) -> TestGeneratorState:
     
     # 2. Process HR's dynamic test config
     config = state.get("test_config")
+    print(f"Test config: {config}")
     if config:
         rules_text = f"MANDATORY: Adhere to the following point budget (Total test points: {config.get('total_points', 100)}):\n"
         dist = config.get("distribution", {})
@@ -107,7 +131,13 @@ def generate_questions(state: TestGeneratorState) -> TestGeneratorState:
         validated_data = DynamicTestStructure.model_validate(response_dict)
         return {**state, "test_content": validated_data.model_dump(), "generation_retries": retries + 1}
     except Exception as e:
-        logger.warning(f"Generation failed: {e}")
+        error_msg = str(e)
+        logger.warning(f"Generation failed: {error_msg}")
+        
+        # NẾU BỊ GROQ CHẶN RATE LIMIT -> BẮT WORKER NGỦ 30 GIÂY RỒI MỚI CHẠY LẠI
+        if "429" in error_msg or "Rate limit" in error_msg:
+            logger.info("Rate limit hit. Sleeping for 20 seconds before retry...")
+            time.sleep(30)
         return {**state, "errors": state["errors"] + [f"Gen Error: {str(e)}"], "generation_retries": retries + 1}
     
 def validate_questions(state: TestGeneratorState) -> TestGeneratorState:
@@ -116,8 +146,8 @@ def validate_questions(state: TestGeneratorState) -> TestGeneratorState:
     logger.info(f"generator.validate_questions application_id={state['application_id']}")
 
     # Nếu bước sinh đề trước đó bị lỗi, bỏ qua bước này
-    if not state.get("test_content") or state.get("errors"):
-        return state
+    if not state.get("test_content"):
+        return {**state, "validation_retries": retries + 1, "is_valid": False}
 
     schema_str = json.dumps(DynamicTestStructure.model_json_schema(), ensure_ascii=False, indent=2)
     
@@ -160,7 +190,13 @@ def validate_questions(state: TestGeneratorState) -> TestGeneratorState:
         validated_data = DynamicTestStructure.model_validate(response_dict)
         return {**state, "test_content": validated_data.model_dump(), "is_valid": True, "validation_retries": retries + 1}
     except Exception as e:
-        logger.warning(f"Validation failed: {e}")
+        error_msg = str(e)
+        logger.warning(f"Validation failed: {error_msg}")
+        
+        # NẾU BỊ GROQ CHẶN RATE LIMIT -> BẮT WORKER NGỦ 20 GIÂY RỒI MỚI CHẠY LẠI
+        if "429" in error_msg or "Rate limit" in error_msg:
+            logger.info("Rate limit hit. Sleeping for 30 seconds before retry...")
+            time.sleep(30)
         return {**state, "errors": state["errors"] + [f"Val Error: {str(e)}"], "validation_retries": retries + 1, "is_valid": False}
 
 

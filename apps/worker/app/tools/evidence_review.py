@@ -3,8 +3,8 @@ import json
 from app.tools.llm import chat_json
 from app.tools.web_search import tavily_search
 
-MAX_REACT_STEPS = 6
-MAX_TAVILY_SEARCHES = 3
+MAX_REACT_STEPS = 3
+MAX_TAVILY_SEARCHES = 2
 
 SYSTEM_PROMPT = """
 You are a bounded ReAct evidence reviewer for a recruiting CV screening system.
@@ -18,7 +18,7 @@ Choose the next action as JSON.
 Allowed actions:
 {"action":"tavily_search","target_id":"...","query":"...","reason":"..."}
 {"action":"finish","review_notes":[...],"risk_flags":[...],"gap_analysis":"..."}
-Limits: at most 3 Tavily searches, at most 6 total steps.
+Limits: at most 2 Tavily searches, at most 3 total steps.
 Prefer finish if unresolved targets are low value or existing evidence is enough.
 """.strip()
 

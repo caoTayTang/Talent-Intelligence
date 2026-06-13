@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, timezone, datetime
 from uuid import UUID
 
 from talent_core.models import *
@@ -90,7 +90,7 @@ def update_cv_screening_result(
 def update_dynamic_test_content(application_id: str, test_content: dict) -> None:
     "Update dynamic test content for the application after question generator graph finishes and open Test round for candidates"
     with SessionLocal() as db:
-        app = db.query(Application).filter(Application.id == UUID(application_id)).first()
+        app = db.query(Application).filter(Application.id == str(application_id)).first()
         if not app:
             raise ValueError(f"Application {application_id} not found")
 
@@ -99,7 +99,7 @@ def update_dynamic_test_content(application_id: str, test_content: dict) -> None
         app.status = ApplicationStatus.cv_passed 
 
         duration_days = app.job.test_duration if app.job.test_duration else 3
-        app.test_deadline = datetime.now(datetime.timezone.utc) + timedelta(days=duration_days)
+        app.test_deadline = datetime.now(timezone.utc) + timedelta(days=duration_days)
         
         new_noti = Notification(
             user_id=app.candidate_id,

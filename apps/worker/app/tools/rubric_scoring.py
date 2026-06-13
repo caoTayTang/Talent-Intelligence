@@ -82,11 +82,11 @@ def build_rationale(
 
 
 def decision_band(total_score: float) -> str:
-    if total_score >= 85:
+    if total_score >= 65:
         return "strong_pass"
-    if total_score >= 70:
+    if total_score >= 50:
         return "pass"
-    if total_score >= 55:
+    if total_score >= 35:
         return "review"
     return "fail"
 
