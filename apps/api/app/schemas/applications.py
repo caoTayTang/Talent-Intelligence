@@ -20,6 +20,9 @@ class ApplicationResponse(BaseModel):
     job_id: UUID
     status: str
 
+    candidate_name: str | None = None
+    candidate_email: str | None = None
+
     cv_object_key: str | None = None
     dynamic_test_content: dict | list | None = None
     test_submission_url: list[str] | None = None
@@ -37,6 +40,8 @@ class ApplicationResponse(BaseModel):
             candidate_id=application.candidate_id,
             job_id=application.job_id,
             status=application.status.value,
+            candidate_name=application.candidate.name if application.candidate else None,
+            candidate_email=application.candidate.email if application.candidate else None,
             cv_object_key=application.cv_object_key,
             dynamic_test_content=application.dynamic_test_content,
             test_submission_url=application.test_submission_url,
@@ -47,3 +52,7 @@ class ApplicationResponse(BaseModel):
             detailed_score_json=application.detailed_score_json,
         )
 
+
+class PaginatedApplicationsResponse(BaseModel):
+    items: list[ApplicationResponse]
+    total: int

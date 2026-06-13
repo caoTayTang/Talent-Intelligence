@@ -2,11 +2,9 @@ from app.celery_app import celery_app
 
 # NOTE: can doi ten cua agent + Queue thi doi ten o day
 TASK_TO_QUEUE = {
-    # "agent.manager": "agent.manager",
-    # "agent.job_assistant": "agent.job_assistant",
-    # "agent.assessment": "agent.assessment",
-    # "agent.transcriber": "agent.transcriber",
+    "agent.assessment": "agent.assessment",
     "agent.cv_screening": "agent.cv_screening",
+    "agent.test_generation": "agent.test_generation",
 }
 
 

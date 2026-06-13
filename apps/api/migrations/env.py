@@ -78,8 +78,6 @@ def run_migrations_online() -> None:
         context.configure(
             connection=connection, 
             target_metadata=target_metadata,
-            # version_table_schema="talent_intelligence",
-            # include_schemas=True,
             )
 
         with context.begin_transaction():

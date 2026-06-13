@@ -168,6 +168,11 @@ class Job(Base):
 
     test_duration: Mapped[int] = mapped_column(Integer, default=3)
 
+    # Hiring Quotas / Thresholds
+    cv_pass_quota: Mapped[int | None] = mapped_column(Integer, default=None)
+    assessment_pass_quota: Mapped[int | None] = mapped_column(Integer, default=None)
+    interview_pass_quota: Mapped[int | None] = mapped_column(Integer, default=None)
+
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(

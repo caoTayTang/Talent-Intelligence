@@ -31,6 +31,10 @@ class CreateJobRequest(BaseModel):
     dynamic_test_config: DynamicTestConfig | None = None
     test_duration: int = Field(default=3, description="Số ngày ứng viên có để làm bài test sau khi Pass CV")
 
+    cv_pass_quota: Optional[int] = None
+    assessment_pass_quota: Optional[int] = None
+    interview_pass_quota: Optional[int] = None
+
 
 class JobResponse(BaseModel):
     id: UUID
@@ -48,6 +52,10 @@ class JobResponse(BaseModel):
     dynamic_test_config: Optional[DynamicTestConfig] = None
     test_duration: int 
 
+    cv_pass_quota: Optional[int] = None
+    assessment_pass_quota: Optional[int] = None
+    interview_pass_quota: Optional[int] = None
+
     @classmethod
     def from_model(cls, job: Job) -> "JobResponse":
         return cls(
@@ -64,5 +72,13 @@ class JobResponse(BaseModel):
             updated_at=job.updated_at,
             dynamic_test_config=job.dynamic_test_config,
             test_duration=job.test_duration,
+            cv_pass_quota=job.cv_pass_quota,
+            assessment_pass_quota=job.assessment_pass_quota,
+            interview_pass_quota=job.interview_pass_quota,
         )
+
+
+class PaginatedJobsResponse(BaseModel):
+    items: list[JobResponse]
+    total: int
 

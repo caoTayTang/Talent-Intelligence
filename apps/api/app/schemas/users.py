@@ -10,6 +10,13 @@ class CreateUserRequest(BaseModel):
     email: EmailStr
     name: str
     role: UserRole
+    password: str
+
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
+    role: UserRole
 
 
 class UserResponse(BaseModel):
