@@ -7,3 +7,4 @@ boto3==1.35.90
 pydantic-settings==2.7.1
 alembic
 pgvector==0.3.6
+passlib[bcrypt]

@@ -20,13 +20,16 @@ class ApplicationResponse(BaseModel):
     job_id: UUID
     status: str
 
+    candidate_name: str | None = None
+    candidate_email: str | None = None
+
     cv_object_key: str | None = None
     dynamic_test_content: dict | list | None = None
     test_submission_url: list[str] | None = None
     test_answer: dict | list | None = None
 
     cv_score: float | None = None
-    total_score: float | None = None
+    test_score: float | None = None
     interview_score: float | None = None
     detailed_score_json: dict | None = None
 
@@ -37,13 +40,19 @@ class ApplicationResponse(BaseModel):
             candidate_id=application.candidate_id,
             job_id=application.job_id,
             status=application.status.value,
+            candidate_name=application.candidate.name if application.candidate else None,
+            candidate_email=application.candidate.email if application.candidate else None,
             cv_object_key=application.cv_object_key,
             dynamic_test_content=application.dynamic_test_content,
             test_submission_url=application.test_submission_url,
             test_answer=application.test_answer,
             cv_score=application.cv_score,
-            total_score=application.total_score,
+            test_score=application.test_score,
             interview_score=application.interview_score,
             detailed_score_json=application.detailed_score_json,
         )
 
+
+class PaginatedApplicationsResponse(BaseModel):
+    items: list[ApplicationResponse]
+    total: int

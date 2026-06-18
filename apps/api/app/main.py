@@ -10,6 +10,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["X-Existing-ID"],
 )
 
 app.include_router(health.router, tags=["health"])

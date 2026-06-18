@@ -3,10 +3,10 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "dev": "../../.venv/bin/celery -A app.celery_app worker --loglevel=info -Q agent.cv_screening,agent.assessment,agent.transcriber,agent.job_assistant,agent.manager",
-    "dev:windows": "../../.venv/bin/celery -A app.celery_app worker --loglevel=info --pool=solo -Q agent.cv_screening,agent.assessment,agent.transcriber,agent.job_assistant,agent.manager",
+    "dev": "../../.venv/bin/celery -A app.celery_app worker --loglevel=info -Q agent.cv_screening,agent.test_generation,agent.assessment,agent.transcriber,agent.job_assistant,agent.manager",
+    "dev:windows": "../../.venv/bin/celery -A app.celery_app worker --loglevel=info --pool=solo -Q agent.cv_screening,agent.test_generation,agent.assessment,agent.transcriber,agent.job_assistant,agent.manager",
     "build": "../../.venv/bin/python -m compileall app",
-    "start": "../../.venv/bin/celery -A app.celery_app worker --loglevel=info -Q agent.cv_screening,agent.assessment,agent.transcriber,agent.job_assistant,agent.manager",
+    "start": "../../.venv/bin/celery -A app.celery_app worker --loglevel=info -Q agent.cv_screening,agent.test_generation,agent.assessment,agent.transcriber,agent.job_assistant,agent.manager",
     "typecheck": "../../.venv/bin/python -m compileall app"
   }
 }

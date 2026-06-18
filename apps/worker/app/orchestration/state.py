@@ -35,3 +35,16 @@ class CVScreeningState(TypedDict):
 
     tool_trace: list[dict]
     errors: list[str]
+
+class TestGeneratorState(TypedDict):
+    application_id: str
+    job_id: str | None
+    jd_text: str
+    cv_profile: dict | None
+    test_config: dict | None
+    test_content: dict | None
+    errors: list[str]
+
+    generation_retries: int
+    validation_retries: int
+    is_valid: bool

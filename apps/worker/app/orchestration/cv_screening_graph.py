@@ -432,7 +432,10 @@ def persist_result(state: CVScreeningState) -> CVScreeningState:
     save_agent_run(
         application_id=state["application_id"],
         agent_type="cv_screener",
-        input_json={"application_id": state["application_id"]},
+        input_json={
+            "application_id": state["application_id"],
+            "cv_object_key": state.get("cv_object_key")
+        },
         output_json=output,
     )
     if state["cv_score"] is not None and state["decision"] is not None:

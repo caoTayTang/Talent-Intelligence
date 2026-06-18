@@ -35,7 +35,7 @@ celery_app.conf.update(
     # task_default_routing_key="agent.manager", # khi cai task no khong dinh cai task nao thi di vo manager?!
     task_queues=(
         agent_queue("agent.cv_screening"),
-        # agent_queue("agent.abcxyz"),
+        agent_queue("agent.test_generation"),
         Queue(
             "agent.dead_letter",
             exchange=dead_letter_exchange,
@@ -47,6 +47,10 @@ celery_app.conf.update(
         "agent.cv_screening": {
             "queue": "agent.cv_screening",
             "routing_key": "agent.cv_screening",
+        },
+        "agent.test_generation": {
+            "queue": "agent.test_generation",
+            "routing_key": "agent.test_generation",
         },
     },
     # FUTURE ROUTES TOO...
