@@ -9,6 +9,7 @@ from app.schemas.jobs import (
     JobResponse,
     PaginatedJobsResponse
 )
+from app.queue import enqueue
 
 from typing import List as PyList
 
@@ -40,7 +41,12 @@ def create_job(request: CreateJobRequest, db: Session = Depends(get_db)) -> JobR
         test_object_url=request.test_object_url,
         scorecard_json=request.scorecard_json,
         jd_object_url=request.jd_object_url,
-        test_duration=3,
+        cv_submission_deadline=request.cv_submission_deadline,
+        test_start_date=request.test_start_date,
+        test_end_date=request.test_end_date,
+        interview_start_date=request.interview_start_date,
+        interview_end_date=request.interview_end_date,
+        result_announcement_date=request.result_announcement_date,
         cv_pass_quota=request.cv_pass_quota,
         assessment_pass_quota=request.assessment_pass_quota,
         interview_pass_quota=request.interview_pass_quota,
@@ -79,6 +85,12 @@ def update_job(
     job.test_object_url = request.test_object_url
     job.scorecard_json = request.scorecard_json
     job.jd_object_url = request.jd_object_url
+    job.cv_submission_deadline = request.cv_submission_deadline
+    job.test_start_date = request.test_start_date
+    job.test_end_date = request.test_end_date
+    job.interview_start_date = request.interview_start_date
+    job.interview_end_date = request.interview_end_date
+    job.result_announcement_date = request.result_announcement_date
     job.is_active = request.is_active
     job.cv_pass_quota = request.cv_pass_quota
     job.assessment_pass_quota = request.assessment_pass_quota
@@ -101,4 +113,14 @@ def delete_job(job_id: UUID, db: Session = Depends(get_db)):
     db.delete(job)
     db.commit()
     return None
+
+
+@router.post("/{job_id}/finalize-cv-round")
+def finalize_cv_round(job_id: UUID, db: Session = Depends(get_db)):
+    job = db.get(Job, job_id)
+    if job is None:
+        raise HTTPException(status_code=404, detail="Job not found")
+
+    task_id = enqueue("agent.process_cohort_advancement", {"job_id": str(job_id)})
+    return {"message": "Batch transition triggered", "task_id": task_id}
 

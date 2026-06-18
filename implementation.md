@@ -198,3 +198,26 @@ The UI must be able to render this structure when a candidate takes a test. This
 }
 ```
 
+## Phase 4: Cohort-Based Batch Transitions (Current Focus)
+
+To support fair, quota-based recruitment, the system is moving from rolling admissions to cohort-based batch transitions.
+
+### 1. New Status: `cv_screened`
+- **Definition**: The AI has completed the screening and evidence verification, but no decision has been made.
+- **Worker Update**: `agent.cv_screening` now terminates at `cv_screened` status and no longer triggers test generation automatically.
+
+### 2. The Batch Transition Worker (`process_cohort_advancement`)
+- **Ranking**: A specialized worker task that retrieves all `cv_screened` applications for a job and ranks them by `cv_score`.
+- **Quota Logic**:
+    - Selects the top `N` candidates where `N = job.cv_pass_quota`.
+    - Advances these candidates to `cv_passed` and triggers `agent.test_generation`.
+    - Transitions the remaining candidates to `cv_failed`.
+
+### 3. Trigger & Automation
+- **Manual Trigger**: API endpoint `POST /jobs/{id}/finalize-cv-round` for HR to manually close the round.
+- **Scheduled Trigger**: Celery Beat checks for `job.cv_submission_deadline` and auto-runs the batch transition.
+
+### 4. UI Integration
+- HR Dashboard displays "CV Screened" candidates with scores.
+- HR Job View provides a "Finalize CV Round" button to execute the batch transition.
+

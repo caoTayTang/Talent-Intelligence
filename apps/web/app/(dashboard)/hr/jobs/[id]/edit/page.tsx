@@ -44,7 +44,12 @@ export default function EditJobPage({ params }: { params: Promise<{ id: string }
   // Form State
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [testDuration, setTestDuration] = useState(3);
+  const [cvSubmissionDeadline, setCvSubmissionDeadline] = useState("");
+  const [testStartDate, setTestStartDate] = useState("");
+  const [testEndDate, setTestEndDate] = useState("");
+  const [interviewStartDate, setInterviewStartDate] = useState("");
+  const [interviewEndDate, setInterviewEndDate] = useState("");
+  const [resultAnnouncementDate, setResultAnnouncementDate] = useState("");
   const [isActive, setIsActive] = useState(true);
   
   // Scorecard State
@@ -65,8 +70,22 @@ export default function EditJobPage({ params }: { params: Promise<{ id: string }
     if (job) {
       setTitle(job.title || "");
       setDescription(job.description || "");
-      setTestDuration(job.test_duration || 3);
       setIsActive(job.is_active ?? true);
+
+      const formatForInput = (isoString: string | null) => {
+        if (!isoString) return "";
+        const date = new Date(isoString);
+        return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+          .toISOString()
+          .slice(0, 16);
+      };
+
+      setCvSubmissionDeadline(formatForInput(job.cv_submission_deadline));
+      setTestStartDate(formatForInput(job.test_start_date));
+      setTestEndDate(formatForInput(job.test_end_date));
+      setInterviewStartDate(formatForInput(job.interview_start_date));
+      setInterviewEndDate(formatForInput(job.interview_end_date));
+      setResultAnnouncementDate(formatForInput(job.result_announcement_date));
       
       if (job.scorecard_json?.criteria) {
         setCriteria(job.scorecard_json.criteria);
@@ -119,7 +138,12 @@ export default function EditJobPage({ params }: { params: Promise<{ id: string }
         title,
         description,
         is_active: isActive,
-        test_duration: testDuration,
+        cv_submission_deadline: cvSubmissionDeadline ? new Date(cvSubmissionDeadline).toISOString() : null,
+        test_start_date: testStartDate ? new Date(testStartDate).toISOString() : null,
+        test_end_date: testEndDate ? new Date(testEndDate).toISOString() : null,
+        interview_start_date: interviewStartDate ? new Date(interviewStartDate).toISOString() : null,
+        interview_end_date: interviewEndDate ? new Date(interviewEndDate).toISOString() : null,
+        result_announcement_date: resultAnnouncementDate ? new Date(resultAnnouncementDate).toISOString() : null,
         cv_pass_quota: cvPassQuota === "" ? null : cvPassQuota,
         assessment_pass_quota: assessmentPassQuota === "" ? null : assessmentPassQuota,
         interview_pass_quota: interviewPassQuota === "" ? null : interviewPassQuota,
@@ -386,34 +410,107 @@ export default function EditJobPage({ params }: { params: Promise<{ id: string }
               </div>
             </section>
 
-            {/* Test Configuration */}
+            {/* Recruitment Timeline */}
             <section className="rounded-2xl border border-black/5 bg-white p-8">
               <h2 className="mb-6 flex items-center gap-2 text-lg font-bold">
                 <Settings2 size={20} className="text-[#e0563f]" />
-                Test Config
+                Recruitment Timeline
               </h2>
               <div className="space-y-6">
-                <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-[#607063]">Deadline (Days)</label>
-                  <input
-                    type="number"
-                    className="w-full rounded-lg border border-[#d8ded5] bg-[#fbfcfa] px-4 py-2 text-sm outline-none focus:border-[#e0563f]"
-                    value={testDuration}
-                    onChange={e => setTestDuration(parseInt(e.target.value) || 0)}
-                  />
-                </div>
-                <div className="space-y-4 pt-4 border-t border-black/5">
-                  <h3 className="text-xs font-bold uppercase text-[#607063]">Multiple Choice</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <Field label="Count" value={mcCount} onChange={setMcCount} />
-                    <Field label="Total Pts" value={mcPoints} onChange={setMcPoints} />
+                <div className="space-y-4">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#607063]">CV Phase</h3>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold uppercase text-[#607063]">Submission Deadline</label>
+                    <input
+                      type="datetime-local"
+                      className="w-full rounded-lg border border-[#d8ded5] bg-[#fbfcfa] px-4 py-2 text-xs outline-none focus:border-[#e0563f]"
+                      value={cvSubmissionDeadline}
+                      onChange={e => setCvSubmissionDeadline(e.target.value)}
+                    />
                   </div>
                 </div>
+
                 <div className="space-y-4">
-                  <h3 className="text-xs font-bold uppercase text-[#607063]">Essay</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <Field label="Count" value={essayCount} onChange={setEssayCount} />
-                    <Field label="Total Pts" value={essayPoints} onChange={setEssayPoints} />
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#607063]">Test Phase</h3>
+                  <div className="grid gap-4">
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold uppercase text-[#607063]">Start Date</label>
+                      <input
+                        type="datetime-local"
+                        className="w-full rounded-lg border border-[#d8ded5] bg-[#fbfcfa] px-4 py-2 text-xs outline-none focus:border-[#e0563f]"
+                        value={testStartDate}
+                        onChange={e => setTestStartDate(e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold uppercase text-[#607063]">End Date</label>
+                      <input
+                        type="datetime-local"
+                        className="w-full rounded-lg border border-[#d8ded5] bg-[#fbfcfa] px-4 py-2 text-xs outline-none focus:border-[#e0563f]"
+                        value={testEndDate}
+                        onChange={e => setTestEndDate(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#607063]">Interview Phase</h3>
+                  <div className="grid gap-4">
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold uppercase text-[#607063]">Start Date</label>
+                      <input
+                        type="datetime-local"
+                        className="w-full rounded-lg border border-[#d8ded5] bg-[#fbfcfa] px-4 py-2 text-xs outline-none focus:border-[#e0563f]"
+                        value={interviewStartDate}
+                        onChange={e => setInterviewStartDate(e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold uppercase text-[#607063]">End Date</label>
+                      <input
+                        type="datetime-local"
+                        className="w-full rounded-lg border border-[#d8ded5] bg-[#fbfcfa] px-4 py-2 text-xs outline-none focus:border-[#e0563f]"
+                        value={interviewEndDate}
+                        onChange={e => setInterviewEndDate(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#607063]">Final Result</h3>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold uppercase text-[#607063]">Announcement Date</label>
+                    <input
+                      type="datetime-local"
+                      className="w-full rounded-lg border border-[#d8ded5] bg-[#fbfcfa] px-4 py-2 text-xs outline-none focus:border-[#e0563f]"
+                      value={resultAnnouncementDate}
+                      onChange={e => setResultAnnouncementDate(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <hr className="border-black/5" />
+                
+                <div className="space-y-4">
+                  <h2 className="flex items-center gap-2 text-lg font-bold">
+                    <ClipboardList size={20} className="text-[#e0563f]" />
+                    Test Distribution
+                  </h2>
+                  <div className="space-y-4">
+                    <h3 className="text-xs font-bold uppercase text-[#607063]">Multiple Choice</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <Field label="Count" value={mcCount} onChange={setMcCount} />
+                      <Field label="Total Pts" value={mcPoints} onChange={setMcPoints} />
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <h3 className="text-xs font-bold uppercase text-[#607063]">Essay</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <Field label="Count" value={essayCount} onChange={setEssayCount} />
+                      <Field label="Total Pts" value={essayPoints} onChange={setEssayPoints} />
+                    </div>
                   </div>
                 </div>
               </div>

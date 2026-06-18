@@ -11,7 +11,8 @@ import {
   Loader2, 
   FileUp, 
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Users
 } from "lucide-react";
 import Link from "next/link";
 import useSWR from "swr";
@@ -180,6 +181,36 @@ export default function CandidateJobDetailPage({ params }: { params: Promise<{ i
               </div>
 
               <div className="mt-10 border-t border-black/5 pt-8">
+                <h3 className="text-lg font-bold mb-4">Recruitment Timeline</h3>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <TimelineItem 
+                    label="CV Submission Deadline" 
+                    date={job.cv_submission_deadline} 
+                    icon={<FileUp size={16} />}
+                  />
+                  <TimelineItem 
+                    label="Test Round" 
+                    date={job.test_start_date && job.test_end_date ? 
+                      `${formatDate(job.test_start_date)} - ${formatDate(job.test_end_date)}` : null
+                    } 
+                    icon={<Sparkles size={16} />}
+                  />
+                  <TimelineItem 
+                    label="Interview Round" 
+                    date={job.interview_start_date && job.interview_end_date ? 
+                      `${formatDate(job.interview_start_date)} - ${formatDate(job.interview_end_date)}` : null
+                    } 
+                    icon={<Users size={16} />}
+                  />
+                  <TimelineItem 
+                    label="Final Results" 
+                    date={job.result_announcement_date} 
+                    icon={<CheckCircle2 size={16} />}
+                  />
+                </div>
+              </div>
+
+              <div className="mt-10 border-t border-black/5 pt-8">
                 <h3 className="text-lg font-bold mb-4">AI Screening Focus</h3>
                 <div className="flex flex-wrap gap-3">
                   {job.scorecard_json?.criteria?.map((c: any) => (
@@ -286,4 +317,31 @@ export default function CandidateJobDetailPage({ params }: { params: Promise<{ i
       </main>
     </div>
   );
+}
+
+function TimelineItem({ label, date, icon }: { label: string, date: string | null, icon: React.ReactNode }) {
+  return (
+    <div className="flex items-start gap-3 rounded-xl border border-black/5 bg-[#fbfcfa] p-4">
+      <div className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-lg bg-white text-[#e0563f] shadow-sm">
+        {icon}
+      </div>
+      <div>
+        <p className="text-[10px] font-bold uppercase tracking-wider text-[#607063]">{label}</p>
+        <p className="mt-0.5 text-xs font-bold text-[#18211d]">
+          {date ? (typeof date === 'string' && date.includes(' - ') ? date : formatDate(date)) : "To be announced"}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function formatDate(dateStr: string | null) {
+  if (!dateStr) return null;
+  return new Date(dateStr).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }

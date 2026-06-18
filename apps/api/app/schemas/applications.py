@@ -29,7 +29,7 @@ class ApplicationResponse(BaseModel):
     test_answer: dict | list | None = None
 
     cv_score: float | None = None
-    total_score: float | None = None
+    test_score: float | None = None
     interview_score: float | None = None
     detailed_score_json: dict | None = None
 
@@ -47,7 +47,7 @@ class ApplicationResponse(BaseModel):
             test_submission_url=application.test_submission_url,
             test_answer=application.test_answer,
             cv_score=application.cv_score,
-            total_score=application.total_score,
+            test_score=application.test_score,
             interview_score=application.interview_score,
             detailed_score_json=application.detailed_score_json,
         )

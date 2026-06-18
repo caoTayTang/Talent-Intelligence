@@ -121,7 +121,7 @@ export default function CandidateApplicationDetailPage({ params }: { params: Pro
             </section>
 
             {/* AI Feedback Section */}
-            {(application.cv_score || application.detailed_score_json) && (
+            {application.status !== "cv_screened" && (application.cv_score || application.detailed_score_json) && (
               <section className="rounded-3xl border border-black/5 bg-white p-10 shadow-sm">
                 <div className="mb-8 flex items-center justify-between">
                    <h2 className="flex items-center gap-2 text-xl font-bold">

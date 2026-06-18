@@ -1,5 +1,5 @@
 from uuid import UUID
-
+from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
@@ -82,6 +82,7 @@ def update_application(
     application.status = ApplicationStatus.pending_cv
     application.cv_score = None
     application.detailed_score_json = None
+    application.updated_at = datetime.now(timezone.utc)
     
     db.commit()
     db.refresh(application)

@@ -25,6 +25,7 @@ def load_application_context(application_id: str) -> dict:
             "jd_text": application.job.description,
             "scorecard_json": application.job.scorecard_json,
             "dynamic_test_config": application.job.dynamic_test_config,
+            "detailed_score_json": application.detailed_score_json,
         }
     finally:
         db.close()
@@ -75,11 +76,7 @@ def update_cv_screening_result(
 
         application.cv_score = cv_score
         application.detailed_score_json = output
-        application.status = (
-            ApplicationStatus.cv_passed
-            if decision == "pass"
-            else ApplicationStatus.cv_failed
-        )
+        application.status = ApplicationStatus.cv_screened
         db.commit()
     except Exception:
         db.rollback()
@@ -98,14 +95,15 @@ def update_dynamic_test_content(application_id: str, test_content: dict) -> None
         
         app.status = ApplicationStatus.cv_passed 
 
-        duration_days = app.job.test_duration if app.job.test_duration else 3
-        app.test_deadline = datetime.now(timezone.utc) + timedelta(days=duration_days)
+        app.test_deadline = app.job.test_end_date
         
+        deadline_str = app.job.test_end_date.strftime("%Y-%m-%d %H:%M") if app.job.test_end_date else "the specified deadline"
+
         new_noti = Notification(
             user_id=app.candidate_id,
             type=NotificationType.test_unlocked,
             title="Test round unlocked",
-            message=f"Congrats! {app.job.title} test has been unlocked. You have {duration_days} days to complete it.",
+            message=f"Congrats! {app.job.title} test has been unlocked. Please complete it by {deadline_str}.",
             is_read=False
         )
         db.add(new_noti)

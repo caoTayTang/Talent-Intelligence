@@ -31,6 +31,7 @@ class UserRole(str, enum.Enum):
 
 class ApplicationStatus(str, enum.Enum):
     pending_cv = "pending_cv"
+    cv_screened = "cv_screened"
     cv_passed = "cv_passed"
     cv_failed = "cv_failed"
     test_submitted = "test_submitted"
@@ -166,7 +167,12 @@ class Job(Base):
     # Nếu HR chọn gen đề tự động thì cần cung cấp cấu trúc đề và phân phối điểm
     dynamic_test_config: Mapped[dict | None] = mapped_column(JSONB)
 
-    test_duration: Mapped[int] = mapped_column(Integer, default=3)
+    cv_submission_deadline: Mapped[datetime | None] = mapped_column(DateTime)
+    test_start_date: Mapped[datetime | None] = mapped_column(DateTime)
+    test_end_date: Mapped[datetime | None] = mapped_column(DateTime)
+    interview_start_date: Mapped[datetime | None] = mapped_column(DateTime)
+    interview_end_date: Mapped[datetime | None] = mapped_column(DateTime)
+    result_announcement_date: Mapped[datetime | None] = mapped_column(DateTime)
 
     # Hiring Quotas / Thresholds
     cv_pass_quota: Mapped[int | None] = mapped_column(Integer, default=None)
@@ -260,7 +266,7 @@ class Application(Base):
 
     # Scoring & Feedback
     cv_score: Mapped[float | None] = mapped_column(Float)
-    total_score: Mapped[float | None] = mapped_column(Float)
+    test_score: Mapped[float | None] = mapped_column(Float)
     interview_score: Mapped[float | None] = mapped_column(Float)
     detailed_score_json: Mapped[dict | None] = mapped_column(JSONB)
 

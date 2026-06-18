@@ -5,6 +5,7 @@ TASK_TO_QUEUE = {
     "agent.assessment": "agent.assessment",
     "agent.cv_screening": "agent.cv_screening",
     "agent.test_generation": "agent.test_generation",
+    "agent.process_cohort_advancement": "agent.process_cohort_advancement",
 }
 
 

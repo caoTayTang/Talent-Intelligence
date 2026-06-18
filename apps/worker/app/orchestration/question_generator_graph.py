@@ -40,22 +40,26 @@ def load_context(state: TestGeneratorState) -> TestGeneratorState:
     logger.info(f"generator.load_context application_id={state['application_id']}")
     context = load_application_context(state["application_id"])
 
-    cv_object_key = context["cv_object_key"]
-    cv_profile = {}
-    error = state["errors"]
+    # cv_object_key = context["cv_object_key"]
+    # cv_profile = {}
+    # error = state["errors"]
 
-    if cv_object_key:
-        try:
-            raw_cv_text = load_r2_text_object(cv_object_key)
-            profile_data, ext_err = extract_cv_profile(raw_cv_text)
-            cv_profile = profile_data
-            if ext_err:
-                error.append(f"Profile extraction warning: {ext_err}")
+    # if cv_object_key:
+    #     try:
+    #         raw_cv_text = load_r2_text_object(cv_object_key)
+    #         profile_data, ext_err = extract_cv_profile(raw_cv_text)
+    #         cv_profile = profile_data
+    #         if ext_err:
+    #             error.append(f"Profile extraction warning: {ext_err}")
         
-        except Exception as e:
-            error.append(f"Failed to load or extract CV: {str(e)}")
-    else:
-        error.append("No cv_object_key found in application context.")
+    #     except Exception as e:
+    #         error.append(f"Failed to load or extract CV: {str(e)}")
+    # else:
+    #     error.append("No cv_object_key found in application context.")
+
+    detail_score = context.get("detailed_score_json", {})
+    cv_profile = detail_score.get("cv_profile", {}) 
+    error = state["errors"]
     
     return {
         **state,
@@ -193,7 +197,7 @@ def validate_questions(state: TestGeneratorState) -> TestGeneratorState:
         error_msg = str(e)
         logger.warning(f"Validation failed: {error_msg}")
         
-        # NẾU BỊ GROQ CHẶN RATE LIMIT -> BẮT WORKER NGỦ 20 GIÂY RỒI MỚI CHẠY LẠI
+        # NẾU BỊ GROQ CHẶN RATE LIMIT -> BẮT WORKER NGỦ 30 GIÂY RỒI MỚI CHẠY LẠI
         if "429" in error_msg or "Rate limit" in error_msg:
             logger.info("Rate limit hit. Sleeping for 30 seconds before retry...")
             time.sleep(30)

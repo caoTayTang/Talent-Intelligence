@@ -29,7 +29,12 @@ class CreateJobRequest(BaseModel):
     is_active: bool = True
 
     dynamic_test_config: DynamicTestConfig | None = None
-    test_duration: int = Field(default=3, description="Số ngày ứng viên có để làm bài test sau khi Pass CV")
+    cv_submission_deadline: Optional[datetime] = None
+    test_start_date: Optional[datetime] = None
+    test_end_date: Optional[datetime] = None
+    interview_start_date: Optional[datetime] = None
+    interview_end_date: Optional[datetime] = None
+    result_announcement_date: Optional[datetime] = None
 
     cv_pass_quota: Optional[int] = None
     assessment_pass_quota: Optional[int] = None
@@ -50,7 +55,12 @@ class JobResponse(BaseModel):
     updated_at: datetime
 
     dynamic_test_config: Optional[DynamicTestConfig] = None
-    test_duration: int 
+    cv_submission_deadline: Optional[datetime] = None
+    test_start_date: Optional[datetime] = None
+    test_end_date: Optional[datetime] = None
+    interview_start_date: Optional[datetime] = None
+    interview_end_date: Optional[datetime] = None
+    result_announcement_date: Optional[datetime] = None
 
     cv_pass_quota: Optional[int] = None
     assessment_pass_quota: Optional[int] = None
@@ -71,7 +81,12 @@ class JobResponse(BaseModel):
             created_at=job.created_at,
             updated_at=job.updated_at,
             dynamic_test_config=job.dynamic_test_config,
-            test_duration=job.test_duration,
+            cv_submission_deadline=job.cv_submission_deadline,
+            test_start_date=job.test_start_date,
+            test_end_date=job.test_end_date,
+            interview_start_date=job.interview_start_date,
+            interview_end_date=job.interview_end_date,
+            result_announcement_date=job.result_announcement_date,
             cv_pass_quota=job.cv_pass_quota,
             assessment_pass_quota=job.assessment_pass_quota,
             interview_pass_quota=job.interview_pass_quota,

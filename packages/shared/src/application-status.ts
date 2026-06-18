@@ -1,5 +1,6 @@
 export const applicationStatuses = [
   "pending_cv",
+  "cv_screened",
   "cv_passed",
   "cv_failed",
   "test_submitted",
@@ -15,6 +16,7 @@ export type ApplicationStatus = (typeof applicationStatuses)[number];
 
 export const applicationStatusLabels: Record<ApplicationStatus, string> = {
   pending_cv: "CV Pending",
+  cv_screened: "Under Review",
   cv_passed: "CV Passed",
   cv_failed: "CV Failed",
   test_submitted: "Test Submitted",

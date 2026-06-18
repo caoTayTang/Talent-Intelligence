@@ -29,6 +29,24 @@ export default function HrJobsPage() {
   const jobs = jobsData?.items || [];
   const totalJobs = jobsData?.total || 0;
 
+  const handleFinalize = async (jobId: string) => {
+    if (!confirm("Are you sure you want to finalize the CV round? This will rank all candidates and advance the top ones based on the quota.")) return;
+    
+    try {
+      const res = await fetch(`${API_BASE}/jobs/${jobId}/finalize-cv-round`, {
+        method: 'POST'
+      });
+      if (res.ok) {
+        alert("Batch transition triggered! Top candidates will be advanced shortly.");
+      } else {
+        alert("Failed to trigger batch transition.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error triggering batch transition.");
+    }
+  };
+
   return (
     <div className="flex min-h-screen bg-[#f3f5f0] text-[#18211d]">
       <HrSidebar />
@@ -96,6 +114,12 @@ export default function HrJobsPage() {
                       </div>
                     </div>
                     <div className="flex gap-2">
+                      <button 
+                        onClick={() => handleFinalize(job.id)}
+                        className="rounded-lg bg-[#18211d] px-3 py-1.5 text-xs font-bold text-white hover:bg-black transition-colors"
+                      >
+                        Finalize CV Round
+                      </button>
                       <Link 
                         href={`/hr/jobs/${job.id}/edit`}
                         className="rounded-lg border border-[#d8ded5] px-3 py-1.5 text-xs font-bold text-[#607063] hover:bg-[#f3f5f0] hover:text-[#18211d] transition-colors"
