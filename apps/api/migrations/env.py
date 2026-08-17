@@ -74,10 +74,11 @@ def run_migrations_online() -> None:
     print(f"\n---> ALEMBIC ĐANG KẾT NỐI TỚI: {connectable.url}\n")
 
     with connectable.connect() as connection:
+        # connection.execute(text("SET search_path TO talent_intelligence"))
 
         context.configure(
             connection=connection, 
-            target_metadata=target_metadata,
+            target_metadata=target_metadata
             )
 
         with context.begin_transaction():

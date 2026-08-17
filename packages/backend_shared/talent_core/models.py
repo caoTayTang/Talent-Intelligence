@@ -28,6 +28,11 @@ class UserRole(str, enum.Enum):
     hr = "hr"
     candidate = "candidate"
 
+class TestMode(str, enum.Enum):
+    fixed = "fixed"
+    generated = "generated"
+    hybrid = "hybrid"
+
 
 class ApplicationStatus(str, enum.Enum):
     pending_cv = "pending_cv"
@@ -178,6 +183,8 @@ class Job(Base):
     cv_pass_quota: Mapped[int | None] = mapped_column(Integer, default=None)
     assessment_pass_quota: Mapped[int | None] = mapped_column(Integer, default=None)
     interview_pass_quota: Mapped[int | None] = mapped_column(Integer, default=None)
+
+    test_mode: Mapped[TestMode | None] = mapped_column(Enum(TestMode, name="test_mode"), default=TestMode.fixed)
 
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
