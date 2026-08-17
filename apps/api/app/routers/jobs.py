@@ -37,6 +37,7 @@ def create_job(request: CreateJobRequest, db: Session = Depends(get_db)) -> JobR
         company_id=request.company_id,
         title=request.title,
         description=request.description,
+        test_mode=request.test_mode,
         test_content=request.test_content,
         test_object_url=request.test_object_url,
         scorecard_json=request.scorecard_json,
@@ -81,6 +82,7 @@ def update_job(
 
     job.title = request.title
     job.description = request.description
+    job.test_mode = request.test_mode
     job.test_content = request.test_content
     job.test_object_url = request.test_object_url
     job.scorecard_json = request.scorecard_json

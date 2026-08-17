@@ -8,3 +8,4 @@ pydantic-settings==2.7.1
 alembic
 pgvector==0.3.6
 passlib[bcrypt]
+docling

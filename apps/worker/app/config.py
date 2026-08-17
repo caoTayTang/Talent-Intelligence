@@ -20,7 +20,13 @@ class Settings(BaseSettings):
 
     llm_base_url: str = "https://api.groq.com/openai/v1"
     llm_api_key: str = ""
-    model_name: str = "llama-3.3-70b-versatile"
+    model_name: str = "openai/gpt-oss-120b"
+    vlm_base_url: str = ""
+    vlm_api_key: str = ""
+    vlm_model_name: str = "qwen/qwen3.6-27b"
+    vlm_mode: str = "auto"
+    vlm_max_pages: int = 8
+    vlm_pages_per_batch: int = 2
     embedding_base_url: str = "https://api.scaleway.ai/v1"
     embedding_api_key: str = ""
     embedding_model_name: str = "qwen3-embedding-8b"

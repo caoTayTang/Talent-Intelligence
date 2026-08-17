@@ -4,7 +4,7 @@ from datetime import datetime
 from pydantic import BaseModel, Field
 from typing import Optional
 
-from talent_core.models import Job
+from talent_core.models import Job, TestMode
 
 class QuestionDistribution(BaseModel):
     count: int = Field(default=0, ge=0, description="number of questions of this type")
@@ -22,6 +22,7 @@ class CreateJobRequest(BaseModel):
     company_id: UUID
     title: str
     description: str
+    test_mode: TestMode | None = TestMode.fixed
     test_content: dict | list | None = None
     test_object_url: str | None = None
     scorecard_json: dict | None = None
@@ -46,6 +47,7 @@ class JobResponse(BaseModel):
     company_id: UUID
     title: str
     description: str
+    test_mode: TestMode | None = None
     test_content: dict | list | None = None
     test_object_url: str | None = None
     scorecard_json: dict | None = None
@@ -73,6 +75,7 @@ class JobResponse(BaseModel):
             company_id=job.company_id,
             title=job.title,
             description=job.description,
+            test_mode=job.test_mode,
             test_content=job.test_content,
             test_object_url=job.test_object_url,
             scorecard_json=job.scorecard_json,

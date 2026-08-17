@@ -4,9 +4,11 @@ pydantic-settings==2.7.1
 langgraph
 boto3
 pdfplumber
+PyMuPDF
 python-docx
 httpx==0.28.1
 uvicorn
 fastapi
 dotenv
-alembicpasslib[bcrypt]
+alembic
+passlib[bcrypt]
